@@ -79,6 +79,50 @@ export type Database = {
           },
         ]
       }
+      admin_users: {
+        Row: {
+          admin_role: Database["public"]["Enums"]["admin_role"]
+          created_at: string
+          created_by: string | null
+          email: string
+          id: string
+          is_active: boolean
+          last_login: string | null
+          password_hash: string
+          updated_at: string
+        }
+        Insert: {
+          admin_role?: Database["public"]["Enums"]["admin_role"]
+          created_at?: string
+          created_by?: string | null
+          email: string
+          id?: string
+          is_active?: boolean
+          last_login?: string | null
+          password_hash: string
+          updated_at?: string
+        }
+        Update: {
+          admin_role?: Database["public"]["Enums"]["admin_role"]
+          created_at?: string
+          created_by?: string | null
+          email?: string
+          id?: string
+          is_active?: boolean
+          last_login?: string | null
+          password_hash?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_users_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bookings: {
         Row: {
           budget_range: string | null
@@ -540,6 +584,27 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_update_user_status: {
+        Args: { p_user_id: string; p_is_active: boolean }
+        Returns: boolean
+      }
+      authenticate_admin: {
+        Args: { p_email: string; p_password: string }
+        Returns: {
+          admin_id: string
+          admin_email: string
+          admin_role: Database["public"]["Enums"]["admin_role"]
+          is_active: boolean
+        }[]
+      }
+      create_admin_user: {
+        Args: {
+          p_email: string
+          p_password: string
+          p_admin_role?: Database["public"]["Enums"]["admin_role"]
+        }
+        Returns: string
+      }
       log_admin_action: {
         Args: {
           p_admin_id: string
@@ -552,7 +617,7 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      admin_role: "super_admin" | "admin" | "moderator"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -667,6 +732,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      admin_role: ["super_admin", "admin", "moderator"],
+    },
   },
 } as const

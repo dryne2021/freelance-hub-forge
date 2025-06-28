@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Search, Menu, User, LogOut } from 'lucide-react';
+import { Search, Menu, User, LogOut, Shield } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -56,6 +56,17 @@ const Header = () => {
 
         {/* Navigation */}
         <div className="flex items-center space-x-4">
+          {/* Admin Button */}
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => navigate('/admin/auth')}
+            className="flex items-center gap-2 text-red-600 border-red-200 hover:bg-red-50"
+          >
+            <Shield className="h-4 w-4" />
+            Admin
+          </Button>
+
           {!loading && (
             <>
               {user ? (
